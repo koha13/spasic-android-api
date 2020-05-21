@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -60,8 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/auth/signup").authenticated();
         http.authorizeRequests().antMatchers("/auth/changepass").authenticated();
         http.authorizeRequests().antMatchers("/auth/**").permitAll().anyRequest().authenticated();
-
-        // http.authorizeRequests().antMatchers("/admin/**").hasAuthority("admin");
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         // http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

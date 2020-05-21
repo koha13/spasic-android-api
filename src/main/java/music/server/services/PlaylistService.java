@@ -69,30 +69,28 @@ public class PlaylistService {
         plRepository.delete(pl);
     }
 
-    public SongModel addSong(int id, int idSong) {
-        Song song = songRepository.findById(idSong).get();
-        Playlist pl = plRepository.findById(id).get();
-        if (pl.addSong(song)) {
-            plRepository.save(pl);
-            User userRepo = userService.getUserRepo();
-            List<Song> likedSong = userRepo.getLikedSong();
-            return Entity2DTO.toSongModel(song, likedSong);
+    public void addSong(int id, int idSong) {
+        if (id == -1) {
+            userService.likeSong(idSong);
+        } else {
+            Song song = songRepository.findById(idSong).get();
+            Playlist pl = plRepository.findById(id).get();
+            if (pl.addSong(song)) {
+                plRepository.save(pl);
+            }
         }
-
-        return null;
     }
 
-    public SongModel deleteSong(int id, int idSong) {
-        Song song = songRepository.findById(idSong).get();
-        Playlist pl = plRepository.findById(id).get();
-        if (pl.deleteSong(song)) {
-            plRepository.save(pl);
-            User userRepo = userService.getUserRepo();
-            List<Song> likedSong = userRepo.getLikedSong();
-            return Entity2DTO.toSongModel(song, likedSong);
+    public void deleteSong(int id, int idSong) {
+        if (id == -1) {
+            userService.unlikeSong(idSong);
+        } else {
+            Song song = songRepository.findById(idSong).get();
+            Playlist pl = plRepository.findById(id).get();
+            if (pl.deleteSong(song)) {
+                plRepository.save(pl);
+            }
         }
-
-        return null;
     }
 
     public List<PlaylistAddToEndPoint> checkSong(int idSong) {

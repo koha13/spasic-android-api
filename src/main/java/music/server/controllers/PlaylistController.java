@@ -44,8 +44,8 @@ public class PlaylistController {
     }
 
     @PostMapping("/{id}/song")
-    public SongModel addSong(@PathVariable int id, @PathParam("idSong") String idSong) {
-        return plService.addSong(id, Integer.parseInt(idSong));
+    public void addSong(@PathVariable int id, @PathParam("idSong") String idSong) {
+        plService.addSong(id, Integer.parseInt(idSong));
     }
 
     @GetMapping("/checksong")
@@ -54,7 +54,7 @@ public class PlaylistController {
     }
 
     @GetMapping("/{id}/deletesong")
-    public SongModel deleteSong(@PathVariable int id, @PathParam("idSong") String idSong) {
-        return plService.deleteSong(id, Integer.parseInt(idSong));
+    public void deleteSong(@PathVariable int id, @PathParam("idSong") String idSong) {
+        plService.deleteSong(id, Integer.parseInt(idSong));
     }
 }

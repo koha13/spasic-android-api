@@ -12,11 +12,8 @@ import music.server.models.SongModel;
 public class Entity2DTO {
 
     public static SongModel toSongModel2(Song song, boolean isLike) {
-        String lyric = null;
-        if (song.getLyric() != null)
-            lyric = "true";
         return new SongModel(song.getId(), song.getName(), song.getLength(), song.getSongImage(), song.getArtists(),
-                lyric, song.getLink(), song.getAlbum(), isLike);
+                song.getLyric(), song.getLink(), song.getAlbum(), isLike);
     }
 
     public static SongModel toSongModel2(Song song, boolean isLike, boolean isLyric) {
