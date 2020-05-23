@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import music.server.models.PlaylistModel;
 import music.server.models.PlaylistAddToEndPoint;
-import music.server.models.SongModel;
 import music.server.services.PlaylistService;
 
 @RestController

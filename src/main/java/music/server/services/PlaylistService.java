@@ -11,7 +11,6 @@ import music.server.entities.Song;
 import music.server.entities.User;
 import music.server.models.PlaylistModel;
 import music.server.models.PlaylistAddToEndPoint;
-import music.server.models.SongModel;
 import music.server.repositories.PlaylistRepository;
 import music.server.repositories.SongRepository;
 import music.server.utils.Entity2DTO;
