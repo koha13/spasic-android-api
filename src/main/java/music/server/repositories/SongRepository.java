@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import music.server.entities.Song;
-import music.server.models.AlbumModel;
 
 public interface SongRepository extends JpaRepository<Song, Integer> {
     public Song findByName(String name);

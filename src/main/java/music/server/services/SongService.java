@@ -21,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import music.server.entities.Song;
 import music.server.entities.User;
-import music.server.models.AlbumModel;
-import music.server.models.SearchRequest;
 import music.server.models.SearchResult;
 import music.server.models.SongModel;
 import music.server.repositories.SongRepository;
@@ -237,27 +235,20 @@ public class SongService {
         }
     }
 
-    public SearchResult search(SearchRequest searchRequest) {
+    public SearchResult search(String key) {
         SearchResult searchResult = new SearchResult();
-        if (searchRequest.getSong() != null) {
-            Pageable topTen = PageRequest.of(0, 5);
-            List<Song> songs = songRepository.findSongByNameLike(searchRequest.getSong(), topTen);
-            User userRepo = userService.getUserRepo();
-            List<Song> likedSong = userRepo.getLikedSong();
-            searchResult.setSongs(Entity2DTO.toSongModelList(songs, likedSong));
-        }
-        if (searchRequest.getAlbum() != null) {
-            Pageable topTen = PageRequest.of(0, 5);
-            List<Song> songs = songRepository.findSongByAlbumLike(searchRequest.getAlbum(), topTen);
-            searchResult.setAlbums(Entity2DTO.songsToAlbumModels(songs));
+        Pageable topTen = PageRequest.of(0, 5);
+        List<Song> songs = songRepository.findSongByNameLike(key, topTen);
+        User userRepo = userService.getUserRepo();
+        List<Song> likedSong = userRepo.getLikedSong();
+        searchResult.setSongs(Entity2DTO.toSongModelList(songs, likedSong));
 
-        }
-        if (searchRequest.getArtist() != null) {
-            Pageable topTen = PageRequest.of(0, 5);
-            List<Song> songs = songRepository.findSongByAlbumLike(searchRequest.getArtist(), topTen);
-            searchResult.setArtists(Entity2DTO.songsToArtistModels(songs));
+        List<Song> songs2 = songRepository.findSongByAlbumLike(key, topTen);
+        searchResult.setAlbums(Entity2DTO.songsToAlbumModels(songs2));
 
-        }
+        List<Song> songs3 = songRepository.findSongByAlbumLike(key, topTen);
+        searchResult.setArtists(Entity2DTO.songsToArtistModels(songs3));
+
         return searchResult;
     }
 }

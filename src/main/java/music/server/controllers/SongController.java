@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import music.server.models.SearchRequest;
 import music.server.models.SearchResult;
 import music.server.models.SongModel;
 import music.server.services.SongService;
@@ -69,7 +68,7 @@ public class SongController {
     }
 
     @GetMapping("/search")
-    public SearchResult search(@RequestBody SearchRequest searchRequest) {
-        return songService.search(searchRequest);
+    public SearchResult search(@RequestParam String key) {
+        return songService.search(key);
     }
 }
