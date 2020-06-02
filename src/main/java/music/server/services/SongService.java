@@ -21,7 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import music.server.entities.Song;
 import music.server.entities.User;
-import music.server.models.SearchResult;
+import music.server.models.AlbumModel;
+import music.server.models.ArtistModel;
 import music.server.models.SongModel;
 import music.server.repositories.SongRepository;
 import music.server.utils.Entity2DTO;
@@ -235,20 +236,25 @@ public class SongService {
         }
     }
 
-    public SearchResult search(String key) {
-        SearchResult searchResult = new SearchResult();
-        Pageable topTen = PageRequest.of(0, 5);
+    public List<SongModel> searchSong(String key, int page, int size) {
+        Pageable topTen = PageRequest.of(page, size);
         List<Song> songs = songRepository.findSongByNameLike(key, topTen);
         User userRepo = userService.getUserRepo();
         List<Song> likedSong = userRepo.getLikedSong();
-        searchResult.setSongs(Entity2DTO.toSongModelList(songs, likedSong));
+        return Entity2DTO.toSongModelList(songs, likedSong);
+    }
 
-        List<Song> songs2 = songRepository.findSongByAlbumLike(key, topTen);
-        searchResult.setAlbums(Entity2DTO.songsToAlbumModels(songs2));
+    public List<AlbumModel> searchAlbum(String key, int page, int size) {
+        Pageable topTen = PageRequest.of(page, size);
 
-        List<Song> songs3 = songRepository.findSongByAlbumLike(key, topTen);
-        searchResult.setArtists(Entity2DTO.songsToArtistModels(songs3));
+        List<Song> songs = songRepository.findSongByAlbumLike(key, topTen);
+        return Entity2DTO.songsToAlbumModels(songs);
+    }
 
-        return searchResult;
+    public List<ArtistModel> searchArtist(String key, int page, int size) {
+        Pageable topTen = PageRequest.of(page, size);
+
+        List<Song> songs = songRepository.findSongByAlbumLike(key, topTen);
+        return Entity2DTO.songsToArtistModels(songs);
     }
 }

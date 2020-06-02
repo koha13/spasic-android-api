@@ -6,12 +6,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import music.server.models.SongUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import music.server.models.SearchResult;
+import music.server.models.AlbumModel;
+import music.server.models.ArtistModel;
 import music.server.models.SongModel;
 import music.server.services.SongService;
 
@@ -22,18 +24,19 @@ public class SongController {
     private SongService songService;
 
     @GetMapping("/song/{fileName}")
-    public ResponseEntity<Resource> getSongById(HttpServletResponse response, @PathVariable String fileName) {
+    public ResponseEntity<Resource> getSongById(final HttpServletResponse response,
+            @PathVariable final String fileName) {
         return songService.serveSong(response, fileName);
     }
 
     @GetMapping("/songinfo/{id}")
-    public SongModel getSongInfo(@PathVariable Integer id) {
+    public SongModel getSongInfo(@PathVariable final Integer id) {
         return songService.getSongInfo(id);
     }
 
     @GetMapping("/scan")
     public String scan() throws Exception {
-        int count = songService.scanAllSong();
+        final int count = songService.scanAllSong();
         return "Got " + count + " songs.";
     }
 
@@ -45,30 +48,47 @@ public class SongController {
     // Paging all songs
     @GetMapping("/allsongs")
     public List<SongModel> getSongsByPage(
-            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(name = "size", required = false, defaultValue = "20") Integer size) {
+            @RequestParam(name = "page", required = false, defaultValue = "0") final Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") final Integer size) {
         return songService.getSongsByPage(page, size);
     }
 
     @PostMapping("/song/upload")
-    public SongModel uploadSong(@RequestParam("file") MultipartFile file) {
+    public SongModel uploadSong(@RequestParam("file") final MultipartFile file) {
         return songService.uploadSong(file);
     }
 
     @PostMapping("/song/update/{id}")
-    public String updateSongInfo(@PathVariable String id, @RequestBody SongUpdateRequest req) throws Exception {
+    public String updateSongInfo(@PathVariable final String id, @RequestBody final SongUpdateRequest req)
+            throws Exception {
         if (songService.updateSongInfo(Integer.parseInt(id), req))
             return "OK";
         throw new Exception("Can not update this song");
     }
 
     @PostMapping("/song/delete/{id}")
-    public void deleteSong(@PathVariable String id) throws Exception {
+    public void deleteSong(@PathVariable final String id) throws Exception {
         songService.deleteSong(Integer.parseInt(id));
     }
 
-    @GetMapping("/search")
-    public SearchResult search(@RequestParam String key) {
-        return songService.search(key);
+    @GetMapping("/searchsong")
+    public List<SongModel> searchSong(@RequestParam final String key,
+            @RequestParam(name = "page", required = false, defaultValue = "0") final Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "20") final Integer size) {
+        return songService.searchSong(key, page, size);
+    }
+
+    @GetMapping("/searchalbum")
+    public List<AlbumModel> searchAlbum(@RequestParam final String key,
+            @RequestParam(name = "page", required = false, defaultValue = "0") final Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "20") final Integer size) {
+        return songService.searchAlbum(key, page, size);
+    }
+
+    @GetMapping("/searchartist")
+    public List<ArtistModel> searchArtist(@RequestParam final String key,
+            @RequestParam(name = "page", required = false, defaultValue = "0") final Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "20") final Integer size) {
+        return songService.searchArtist(key, page, size);
     }
 }
