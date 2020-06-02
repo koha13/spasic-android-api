@@ -64,18 +64,18 @@ public class Entity2DTO {
         return new PlaylistAddToEndPoint(playlist.getId(), playlist.getName(), check);
     }
 
-    public static List<AlbumModel> songsToAlbumModels(List<Song> songs) {
+    public static List<AlbumModel> songsToAlbumModels(List<Object[]> songs) {
         List<AlbumModel> albumModels = new ArrayList<>();
-        for (Song s : songs) {
-            albumModels.add(new AlbumModel(s.getAlbum(), s.getArtists(), s.getSongImage()));
+        for (Object[] s : songs) {
+            albumModels.add(new AlbumModel(s[0].toString(), s[1].toString(), s[2].toString()));
         }
         return albumModels;
     }
 
-    public static List<ArtistModel> songsToArtistModels(List<Song> songs) {
+    public static List<ArtistModel> songsToArtistModels(List<Object[]> songs) {
         List<ArtistModel> artistModel = new ArrayList<>();
-        for (Song s : songs) {
-            artistModel.add(new ArtistModel(s.getArtists(), s.getSongImage()));
+        for (Object[] s : songs) {
+            artistModel.add(new ArtistModel(s[0].toString(), s[1].toString()));
         }
         return artistModel;
     }
