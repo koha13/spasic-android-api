@@ -21,6 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import music.server.entities.Song;
 import music.server.entities.User;
+import music.server.models.AlbumModel;
+import music.server.models.SearchRequest;
+import music.server.models.SearchResult;
 import music.server.models.SongModel;
 import music.server.repositories.SongRepository;
 import music.server.utils.Entity2DTO;
@@ -234,13 +237,27 @@ public class SongService {
         }
     }
 
-    public List<SongModel> searchSongByAlbum(String album) {
-        if (album != null) {
-            List<Song> songs = songRepository.findByAlbum(album);
+    public SearchResult search(SearchRequest searchRequest) {
+        SearchResult searchResult = new SearchResult();
+        if (searchRequest.getSong() != null) {
+            Pageable topTen = PageRequest.of(0, 5);
+            List<Song> songs = songRepository.findSongByNameLike(searchRequest.getSong(), topTen);
             User userRepo = userService.getUserRepo();
             List<Song> likedSong = userRepo.getLikedSong();
-            return Entity2DTO.toSongModelList(songs, likedSong);
+            searchResult.setSongs(Entity2DTO.toSongModelList(songs, likedSong));
         }
-        return null;
+        if (searchRequest.getAlbum() != null) {
+            Pageable topTen = PageRequest.of(0, 5);
+            List<Song> songs = songRepository.findSongByAlbumLike(searchRequest.getAlbum(), topTen);
+            searchResult.setAlbums(Entity2DTO.songsToAlbumModels(songs));
+
+        }
+        if (searchRequest.getArtist() != null) {
+            Pageable topTen = PageRequest.of(0, 5);
+            List<Song> songs = songRepository.findSongByAlbumLike(searchRequest.getArtist(), topTen);
+            searchResult.setArtists(Entity2DTO.songsToArtistModels(songs));
+
+        }
+        return searchResult;
     }
 }

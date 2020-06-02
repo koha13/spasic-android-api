@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import music.server.entities.Playlist;
+import music.server.models.AlbumModel;
+import music.server.models.ArtistModel;
 import music.server.models.PlaylistAddToEndPoint;
 import music.server.models.SongModel;
 
@@ -60,5 +62,21 @@ public class Entity2DTO {
 
     public static PlaylistAddToEndPoint toPLEndPoint(Playlist playlist, boolean check) {
         return new PlaylistAddToEndPoint(playlist.getId(), playlist.getName(), check);
+    }
+
+    public static List<AlbumModel> songsToAlbumModels(List<Song> songs) {
+        List<AlbumModel> albumModels = new ArrayList<>();
+        for (Song s : songs) {
+            albumModels.add(new AlbumModel(s.getAlbum(), s.getArtists(), s.getSongImage()));
+        }
+        return albumModels;
+    }
+
+    public static List<ArtistModel> songsToArtistModels(List<Song> songs) {
+        List<ArtistModel> artistModel = new ArrayList<>();
+        for (Song s : songs) {
+            artistModel.add(new ArtistModel(s.getArtists(), s.getSongImage()));
+        }
+        return artistModel;
     }
 }
