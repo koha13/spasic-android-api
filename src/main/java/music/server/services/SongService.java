@@ -238,7 +238,7 @@ public class SongService {
 
     public List<SongModel> searchSong(String key, int page, int size) {
         Pageable topTen = PageRequest.of(page, size);
-        List<Song> songs = songRepository.findSongByNameLike(key, topTen);
+        List<Song> songs = songRepository.findSongByNameLike(key.trim().toLowerCase(), topTen);
         User userRepo = userService.getUserRepo();
         List<Song> likedSong = userRepo.getLikedSong();
         return Entity2DTO.toSongModelList(songs, likedSong);
@@ -247,14 +247,14 @@ public class SongService {
     public List<AlbumModel> searchAlbum(String key, int page, int size) {
         Pageable topTen = PageRequest.of(page, size);
 
-        List<Object[]> songs = songRepository.findSongByAlbumLike(key, topTen);
+        List<Object[]> songs = songRepository.findSongByAlbumLike(key.trim().toLowerCase(), topTen);
         return Entity2DTO.songsToAlbumModels(songs);
     }
 
     public List<ArtistModel> searchArtist(String key, int page, int size) {
         Pageable topTen = PageRequest.of(page, size);
 
-        List<Object[]> songs = songRepository.findSongByArtistLike(key, topTen);
+        List<Object[]> songs = songRepository.findSongByArtistLike(key.trim().toLowerCase(), topTen);
         return Entity2DTO.songsToArtistModels(songs);
     }
 }
