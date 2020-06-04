@@ -94,12 +94,12 @@ public class SongController {
     }
 
     @GetMapping(value = "/album")
-    public List<SongModel> findByAlbum(@RequestParam String album) {
-        return songService.findByAlbum(album);
+    public List<SongModel> findByAlbum(@RequestParam String key) {
+        return songService.findByAlbum(key);
     }
 
     @GetMapping(value = "/artist")
-    public List<SongModel> findByArtists(@RequestParam String artist) {
-        return songService.findByArtists(artist);
+    public List<SongModel> findByArtists(@RequestParam String key) {
+        return songService.findByArtists(key);
     }
 }
