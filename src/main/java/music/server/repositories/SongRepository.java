@@ -12,9 +12,11 @@ import music.server.entities.Song;
 public interface SongRepository extends JpaRepository<Song, Integer> {
     public Song findByName(String name);
 
-    public List<Song> findByAlbum(String album);
+    @Query("SELECT s FROM Song s WHERE LOWER(s.album) LIKE :album")
+    public List<Song> findByAlbum(@Param("album") String album);
 
-    public List<Song> findByArtists(String artists);
+    @Query("SELECT s FROM Song s WHERE LOWER(s.artists) LIKE :artists")
+    public List<Song> findByArtists(@Param("artists") String artists);
 
     @Query("SELECT s FROM Song s WHERE LOWER(s.name) LIKE CONCAT('%',:name,'%') ORDER BY s.id DESC")
     List<Song> findSongByNameLike(@Param("name") String key, Pageable pageable);

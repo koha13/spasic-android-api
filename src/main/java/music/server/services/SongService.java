@@ -259,14 +259,14 @@ public class SongService {
     }
 
     public List<SongModel> findByAlbum(String album) {
-        List<Song> songs = songRepository.findByAlbum(album);
+        List<Song> songs = songRepository.findByAlbum(album.trim().toLowerCase());
         User userRepo = userService.getUserRepo();
         List<Song> likedSong = userRepo.getLikedSong();
         return Entity2DTO.toSongModelList(songs, likedSong);
     }
 
     public List<SongModel> findByArtists(String artists) {
-        List<Song> songs = songRepository.findByArtists(artists);
+        List<Song> songs = songRepository.findByArtists(artists.trim().toLowerCase());
         User userRepo = userService.getUserRepo();
         List<Song> likedSong = userRepo.getLikedSong();
         return Entity2DTO.toSongModelList(songs, likedSong);
