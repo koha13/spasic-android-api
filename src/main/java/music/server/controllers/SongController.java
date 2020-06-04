@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import music.server.models.SongUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +15,8 @@ import music.server.models.AlbumModel;
 import music.server.models.ArtistModel;
 import music.server.models.SongModel;
 import music.server.services.SongService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class SongController {
@@ -90,5 +91,15 @@ public class SongController {
             @RequestParam(name = "page", required = false, defaultValue = "0") final Integer page,
             @RequestParam(name = "size", required = false, defaultValue = "20") final Integer size) {
         return songService.searchArtist(key, page, size);
+    }
+
+    @GetMapping(value = "/album")
+    public List<SongModel> findByAlbum(@RequestParam String album) {
+        return songService.findByAlbum(album);
+    }
+
+    @GetMapping(value = "/artist")
+    public List<SongModel> findByArtists(@RequestParam String artist) {
+        return songService.findByArtists(artist);
     }
 }
