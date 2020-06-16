@@ -102,4 +102,14 @@ public class SongController {
     public List<SongModel> findByArtists(@RequestParam String key) {
         return songService.findByArtists(key);
     }
+
+    @PostMapping(value = "/upPlay/{songId}")
+    public void upPlaySongById(@PathVariable int songId){
+        songService.upPlaySongById(songId);
+    }
+
+    @GetMapping(value = "/rank")
+    public List<SongModel> getRank(){
+        return songService.getSongRank();
+    }
 }

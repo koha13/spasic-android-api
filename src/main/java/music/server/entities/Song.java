@@ -69,4 +69,6 @@ public class Song {
         this.link = link;
     }
 
+    private int play;
+
 }

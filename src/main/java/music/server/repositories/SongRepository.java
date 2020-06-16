@@ -27,4 +27,7 @@ public interface SongRepository extends JpaRepository<Song, Integer> {
     @Query("SELECT s.artists, MIN(s.songImage) FROM Song s WHERE LOWER(s.artists) LIKE CONCAT('%',:name,'%') GROUP BY artists")
     List<Object[]> findSongByArtistLike(@Param("name") String key, Pageable pageable);
 
+    @Query("SELECT s FROM Song s ORDER BY s.play DESC")
+    List<Song> findTop20ByPlay(Pageable pageable);
+
 }

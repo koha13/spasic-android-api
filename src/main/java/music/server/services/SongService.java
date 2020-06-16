@@ -271,4 +271,18 @@ public class SongService {
         List<Song> likedSong = userRepo.getLikedSong();
         return Entity2DTO.toSongModelList(songs, likedSong);
     }
+
+    public void upPlaySongById(int songId) {
+        Song song = songRepository.findById(songId).get();
+        song.setPlay(song.getPlay() + 1);
+        songRepository.save(song);
+    }
+
+    public List<SongModel> getSongRank() {
+        Pageable top20 = PageRequest.of(0, 20);
+        List<Song> songs = songRepository.findTop20ByPlay(top20);
+        User userRepo = userService.getUserRepo();
+        List<Song> likedSong = userRepo.getLikedSong();
+        return Entity2DTO.toSongModelList(songs, likedSong);
+    }
 }
