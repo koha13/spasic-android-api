@@ -42,9 +42,6 @@ public class UserService {
     private SongService songService;
 
     public LoginResponse signup(SignupRequest signupRequest) throws Exception {
-        User userAdmin = getCurrentUser();
-        if (userAdmin.getRole().compareTo("admin") != 0)
-            throw new Exception("Only admin can add use");
         User userCheck = userRepository.findByUsername(signupRequest.getUsername());
         if (userCheck != null) {
             throw new UsernameIsAlreadyTakenException();
