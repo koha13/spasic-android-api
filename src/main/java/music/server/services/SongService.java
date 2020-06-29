@@ -80,10 +80,10 @@ public class SongService {
 
     public List<SongModel> getSongsByPage(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Song> songs = songRepository.findAll(pageable);
+        List<Song> songs = songRepository.findAllByOrderByIdDesc(pageable);
         User userRepo = userService.getUserRepo();
         List<Song> likedSong = userRepo.getLikedSong();
-        return Entity2DTO.toSongModelList(songs.getContent(), likedSong);
+        return Entity2DTO.toSongModelList(songs, likedSong);
     }
 
     public ResponseEntity<Resource> serveSong(HttpServletResponse response, String fileName) {

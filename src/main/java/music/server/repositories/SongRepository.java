@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import music.server.entities.Song;
 
 public interface SongRepository extends JpaRepository<Song, Integer> {
+    public List<Song> findAllByOrderByIdDesc(Pageable pageable);
+
     public Song findByName(String name);
 
     @Query("SELECT s FROM Song s WHERE LOWER(s.album) LIKE :album")
