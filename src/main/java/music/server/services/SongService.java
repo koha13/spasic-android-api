@@ -1,5 +1,36 @@
 package music.server.services;
 
+import music.server.entities.Collector;
+import music.server.entities.Song;
+import music.server.entities.User;
+import music.server.models.AlbumModel;
+import music.server.models.ArtistModel;
+import music.server.models.SongModel;
+import music.server.models.SongUpdateRequest;
+import music.server.repositories.CollectorRepository;
+import music.server.repositories.SongRepository;
+import music.server.utils.Entity2DTO;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.datatype.Artwork;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -11,49 +42,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import music.server.models.SongUpdateRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import music.server.entities.Song;
-import music.server.entities.User;
-import music.server.models.AlbumModel;
-import music.server.models.ArtistModel;
-import music.server.models.SongModel;
-import music.server.repositories.SongRepository;
-import music.server.utils.Entity2DTO;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.datatype.Artwork;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-
-import music.server.services.SongService;
-
 @Service
 public class SongService {
     @Autowired
-    private SongRepository songRepository;
-
-    @Autowired
     UserService userService;
-
+    @Autowired
+    CollectorRepository collectorRepository;
+    @Autowired
+    private SongRepository songRepository;
     @Value("${source}")
     private String source;
 
@@ -149,8 +145,8 @@ public class SongService {
     }
 
     private boolean checkSongFile(String fileExtension) {
-        String[] allowedExtension = new String[] { "mp3", "m4a", "wav", "aac", "ogg", "wma", "flac", "alac", "pcm",
-                "aiff" };
+        String[] allowedExtension = new String[]{"mp3", "m4a", "wav", "aac", "ogg", "wma", "flac", "alac", "pcm",
+                "aiff"};
         List<String> allowedExtensionList = Arrays.asList(allowedExtension);
         return allowedExtensionList.contains(fileExtension.toString());
     }
@@ -273,9 +269,21 @@ public class SongService {
     }
 
     public void upPlaySongById(int songId) {
+        User user = userService.getUserRepo();
         Song song = songRepository.findById(songId).get();
         song.setPlay(song.getPlay() + 1);
+        updateCollector(song, user, 10);
         songRepository.save(song);
+    }
+
+    public void updateCollector(Song song, User user, int point) {
+        Collector col = collectorRepository.findByUserIdAndSong(user.getId(), song.getId());
+        if (col == null) {
+            collectorRepository.save(new Collector(user, song, point));
+        } else {
+            col.setPoint(col.getPoint() + point);
+            collectorRepository.save(col);
+        }
     }
 
     public List<SongModel> getSongRank() {
