@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import music.server.config.CustomUserDetails;
+import music.server.entities.Song;
 import music.server.entities.User;
 import music.server.exceptionhandle.ApiMissingException;
 import music.server.exceptionhandle.UsernameIsAlreadyTakenException;
@@ -110,14 +111,18 @@ public class UserService {
     public void likeSong(int idSong) {
         User user = getCurrentUser();
         User userRepo = userRepository.findById(user.getId()).get();
-        userRepo.likeSong(songService.getSongById(idSong));
+        Song song = songService.getSongById(idSong);
+        userRepo.likeSong(song);
         userRepository.save(userRepo);
+        songService.updateCollector(song, userRepo, 50);
     }
 
     public void unlikeSong(int idSong) {
         User user = getCurrentUser();
         User userRepo = userRepository.findById(user.getId()).get();
-        userRepo.unlikeSong(songService.getSongById(idSong));
+        Song song = songService.getSongById(idSong);
+        userRepo.unlikeSong(song);
         userRepository.save(userRepo);
+        songService.updateCollector(song, userRepo, 50);
     }
 }

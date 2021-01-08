@@ -23,6 +23,8 @@ public class PlaylistService {
     private SongRepository songRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SongService songService;
 
     public PlaylistModel addPL(String name) {
         if (plRepository.findByName(name) != null) {
@@ -75,7 +77,9 @@ public class PlaylistService {
             Song song = songRepository.findById(idSong).get();
             Playlist pl = plRepository.findById(id).get();
             if (pl.addSong(song)) {
-                plRepository.save(pl);
+              User user = userService.getUserRepo();
+              songService.updateCollector(song, user, 30);
+              plRepository.save(pl);
             }
         }
     }
@@ -87,6 +91,8 @@ public class PlaylistService {
             Song song = songRepository.findById(idSong).get();
             Playlist pl = plRepository.findById(id).get();
             if (pl.deleteSong(song)) {
+              User user = userService.getUserRepo();
+              songService.updateCollector(song, user, -30);
                 plRepository.save(pl);
             }
         }
