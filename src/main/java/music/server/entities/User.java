@@ -33,6 +33,10 @@ public class User {
     @JoinTable(name = "user_song", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<Song> likedSong = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "sg_user_song", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "song_id"))
+    private List<Song> suggestSongs = new ArrayList<>();
+
     public User(@NotNull String username, @NotNull String password) {
         this.username = username;
         this.password = password;

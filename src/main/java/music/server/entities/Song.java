@@ -57,6 +57,10 @@ public class Song {
     @JoinTable(name = "user_song", joinColumns = @JoinColumn(name = "song_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> usersLiked = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "sg_user_song", joinColumns = @JoinColumn(name = "song_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> usersSuggested = new ArrayList<>();
+
     public Song(@NotNull String name, int length, String songImage, String artists, String lyric, String fileName,
             String album, String link) {
         this.name = name;

@@ -78,7 +78,7 @@ public class PlaylistService {
             Playlist pl = plRepository.findById(id).get();
             if (pl.addSong(song)) {
               User user = userService.getUserRepo();
-              songService.updateCollector(song, user, 30);
+              songService.updateCollector(song, user, 1.5f);
               plRepository.save(pl);
             }
         }
@@ -92,7 +92,7 @@ public class PlaylistService {
             Playlist pl = plRepository.findById(id).get();
             if (pl.deleteSong(song)) {
               User user = userService.getUserRepo();
-              songService.updateCollector(song, user, -30);
+              songService.updateCollector(song, user, -1.5f);
                 plRepository.save(pl);
             }
         }

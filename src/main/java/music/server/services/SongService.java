@@ -272,11 +272,11 @@ public class SongService {
         User user = userService.getUserRepo();
         Song song = songRepository.findById(songId).get();
         song.setPlay(song.getPlay() + 1);
-        updateCollector(song, user, 10);
+        updateCollector(song, user, 0.5f);
         songRepository.save(song);
     }
 
-    public void updateCollector(Song song, User user, int point) {
+    public void updateCollector(Song song, User user, float point) {
         Collector col = collectorRepository.findByUserIdAndSong(user.getId(), song.getId());
         if (col == null) {
             collectorRepository.save(new Collector(user, song, point));

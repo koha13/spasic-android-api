@@ -114,7 +114,7 @@ public class UserService {
         Song song = songService.getSongById(idSong);
         userRepo.likeSong(song);
         userRepository.save(userRepo);
-        songService.updateCollector(song, userRepo, 50);
+        songService.updateCollector(song, userRepo, 3);
     }
 
     public void unlikeSong(int idSong) {

@@ -21,9 +21,9 @@ public class Collector {
   @OneToOne
   @JoinColumn(name = "song_id")
   Song song;
-  int point;
+  float point;
 
-  public Collector(User user, Song song, int point) {
+  public Collector(User user, Song song, float point) {
     this.user = user;
     this.song = song;
     this.point = point;
