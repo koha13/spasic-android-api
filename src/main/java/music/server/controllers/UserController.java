@@ -1,6 +1,7 @@
 package music.server.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import music.server.models.ChangePasswordRequest;
 import music.server.models.LoginRequest;
 import music.server.models.LoginResponse;
 import music.server.models.SignupRequest;
+import music.server.models.SuggestRequest;
 import music.server.repositories.UserRepository;
 import music.server.services.JwtService;
 import music.server.services.UserService;
@@ -27,43 +29,58 @@ import music.server.services.UserService;
 @CrossOrigin(origins = "http://localhost:8080")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+  @Autowired
+  UserService userService;
 
-    @Autowired
-    UserRepository userRepository;
+  @Autowired
+  UserRepository userRepository;
 
-    @Autowired
-    JwtService jwtService;
+  @Autowired
+  JwtService jwtService;
 
-    @PostMapping("/auth/signup")
-    public LoginResponse signup(@Valid @RequestBody SignupRequest signupRequest) throws Exception {
-        return userService.signup(signupRequest);
-    }
+  @PostMapping("/auth/signup")
+  public LoginResponse signup(@Valid @RequestBody SignupRequest signupRequest) throws Exception {
+    return userService.signup(signupRequest);
+  }
 
-    @PostMapping("/auth/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        return userService.getLoginResponse(loginRequest.getUsername(), loginRequest.getPassword());
-    }
+  @PostMapping("/auth/login")
+  public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+    return userService.getLoginResponse(loginRequest.getUsername(), loginRequest.getPassword());
+  }
 
-    @GetMapping("/auth/verify/{token}")
-    public LoginResponse checkToken(@PathVariable String token)
-            throws JsonParseException, JsonMappingException, IOException {
-        return userService.checkToken(token);
-    }
+  @GetMapping("/auth/verify/{token}")
+  public LoginResponse checkToken(@PathVariable String token)
+      throws JsonParseException, JsonMappingException, IOException {
+    return userService.checkToken(token);
+  }
 
-    @PostMapping("/auth/changepass")
-    public LoginResponse changePass(@Valid @RequestBody ChangePasswordRequest c) {
-        return userService.changePass(c);
-    }
+  @PostMapping("/auth/changepass")
+  public LoginResponse changePass(@Valid @RequestBody ChangePasswordRequest c) {
+    return userService.changePass(c);
+  }
 
-    @PostMapping("/like/{idSong}")
-    public void likeSong(@PathVariable String idSong) {
-        userService.likeSong(Integer.parseInt(idSong));
-    }
+  @PostMapping("/like/{idSong}")
+  public void likeSong(@PathVariable String idSong) {
+    userService.likeSong(Integer.parseInt(idSong));
+  }
 
-    @PostMapping("/unlike/{idSong}")
-    public void unlikeSong(@PathVariable String idSong) {
-        userService.unlikeSong(Integer.parseInt(idSong));
-    }
+  @PostMapping("/unlike/{idSong}")
+  public void unlikeSong(@PathVariable String idSong) {
+    userService.unlikeSong(Integer.parseInt(idSong));
+  }
+
+  @PostMapping("/sg/update")
+  public void updateSuggestedList(@RequestBody List<SuggestRequest> sg) {
+    userService.updateSuggest(sg);
+  }
+
+  @GetMapping("/sg/rating")
+  public List<String> getAllRating() {
+    return userService.getAllRating();
+  }
+
+  // @GetMapping("/sg/song")
+  // public void getSongs() {
+  // userService.getSong();
+  // }
 }
