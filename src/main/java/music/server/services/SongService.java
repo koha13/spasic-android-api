@@ -9,6 +9,7 @@ import music.server.models.SongModel;
 import music.server.models.SongUpdateRequest;
 import music.server.repositories.CollectorRepository;
 import music.server.repositories.SongRepository;
+import music.server.repositories.UserRepository;
 import music.server.utils.Entity2DTO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -46,6 +47,8 @@ import java.util.List;
 public class SongService {
   @Autowired
   UserService userService;
+  @Autowired
+  UserRepository userRepository;
   @Autowired
   CollectorRepository collectorRepository;
   @Autowired
