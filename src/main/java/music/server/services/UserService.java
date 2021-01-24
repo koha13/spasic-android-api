@@ -59,9 +59,7 @@ public class UserService {
   private SongService songService;
 
   public LoginResponse signup(SignupRequest signupRequest) throws Exception {
-    User userAdmin = getCurrentUser();
-    if (userAdmin.getRole().compareTo("admin") != 0)
-      throw new Exception("Only admin can add use");
+
     User userCheck = userRepository.findByUsername(signupRequest.getUsername());
     if (userCheck != null) {
       throw new UsernameIsAlreadyTakenException();
@@ -72,6 +70,13 @@ public class UserService {
     String role = signupRequest.getRole();
 
     User user = new User(username, passwordEncode, role);
+    Pageable pageable = PageRequest.of(0, 50);
+    List<Song> ss2 = songRepository.findAll(pageable).getContent();
+    List<Song> ss = new ArrayList<>(ss2);
+    Collections.shuffle(ss);
+    for (int j = 0; j < ss.size(); j++) {
+      user.getSuggestSongs().add(ss.get(j));
+    }
     userRepository.save(user);
     return getLoginResponse(username, password);
   }
@@ -145,7 +150,10 @@ public class UserService {
     songService.updateCollector(song, userRepo, 50);
   }
 
-  public void updateSuggest(List<SuggestRequest> sg) {
+  public void updateSuggest(List<SuggestRequest> sg) throws Exception {
+    User userAdmin = getCurrentUser();
+    if (userAdmin.getRole().compareTo("admin") != 0)
+      throw new Exception("Only admin can add use");
     for (int i = 0; i < sg.size(); i++) {
       User u = userRepository.findById(Integer.parseInt(sg.get(i).getUserId())).get();
       String songSg = sg.get(i).getSongId();

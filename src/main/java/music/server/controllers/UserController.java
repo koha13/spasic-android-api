@@ -70,7 +70,7 @@ public class UserController {
   }
 
   @PostMapping("/sg/update")
-  public void updateSuggestedList(@RequestBody List<SuggestRequest> sg) {
+  public void updateSuggestedList(@RequestBody List<SuggestRequest> sg) throws Exception {
     userService.updateSuggest(sg);
   }
 
